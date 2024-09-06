@@ -1,0 +1,6 @@
+[package]
+name = "algorithms-on-graphs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
