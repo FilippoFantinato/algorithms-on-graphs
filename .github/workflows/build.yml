@@ -27,3 +27,5 @@ jobs:
       run: cargo build --verbose
     - name: Run tests and code coverage
       run: cargo tarpaulin --engine llvm --follow-exec --post-test-delay 10 --coveralls ${{ secrets.COVERALLS_TOKEN }}
+    - name: format check
+      run: cargo fmt -- --check
