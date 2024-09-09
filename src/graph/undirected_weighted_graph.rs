@@ -1,7 +1,7 @@
 use crate::graph::graph::Graph;
 
 pub struct UndirectedWeightedGraph {
-    adj_matrix: Vec<Vec<i128>>
+    adj_matrix: Vec<Vec<i128>>,
 }
 
 impl Graph for UndirectedWeightedGraph {

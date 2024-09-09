@@ -7,7 +7,9 @@ pub fn is_acyclic(g: &dyn Graph, start: usize) -> bool {
         if !visited[u] {
             let cycle = dfs_cycle(g, start, None, &mut visited);
 
-            if cycle { return false; }
+            if cycle {
+                return false;
+            }
         }
     }
 
@@ -20,14 +22,13 @@ fn dfs_cycle(g: &dyn Graph, u: usize, parent: Option<usize>, visited: &mut Vec<b
     let adj_list = g.get_adj_list(u);
     for v in 0..adj_list.len() {
         if (parent.is_none() || v != parent.unwrap()) && g.get_weight(u, v) != 0 {
-            if visited[v] 
-            {
+            if visited[v] {
                 return true;
-            }
-            else 
-            {
+            } else {
                 let cycle = dfs_cycle(g, v, Some(u), visited);
-                if cycle { return true; }
+                if cycle {
+                    return true;
+                }
             }
         }
     }
