@@ -1,28 +1,34 @@
-use crate::graph::graph::Graph;
+use std::collections::HashSet;
 
-pub fn is_acyclic(g: &dyn Graph, start: usize) -> bool {
-    let mut visited = vec![false; g.get_size()];
+use crate::graph::graph::{Graph, Vertex};
 
-    for u in 0..g.get_size() {
-        if !visited[u] {
-            let cycle = dfs_cycle(g, start, None, &mut visited);
+pub fn run(g: &dyn Graph) -> bool {
+    return is_acyclic(g);
+}
 
-            if cycle {
-                return false;
-            }
+pub fn is_acyclic(g: &dyn Graph) -> bool {
+    for u in g.get_vertices() {
+        let mut visited: HashSet<Vertex> = HashSet::new();
+        let cycle = dfs_cycle(g, u, None, &mut visited);
+        if cycle {
+            return false;
         }
     }
 
     return true;
 }
 
-fn dfs_cycle(g: &dyn Graph, u: usize, parent: Option<usize>, visited: &mut Vec<bool>) -> bool {
-    visited[u] = true;
+fn dfs_cycle(
+    g: &dyn Graph,
+    u: &Vertex,
+    parent: Option<&Vertex>,
+    visited: &mut HashSet<Vertex>,
+) -> bool {
+    visited.insert(*u);
 
-    let adj_list = g.get_adj_list(u);
-    for v in 0..adj_list.len() {
-        if (parent.is_none() || v != parent.unwrap()) && g.get_weight(u, v) != 0 {
-            if visited[v] {
+    for v in g.get_vertices() {
+        if (parent.is_none() || *v != *parent.unwrap()) && g.get_weight(u, v).is_some() {
+            if visited.get(v).is_some() {
                 return true;
             } else {
                 let cycle = dfs_cycle(g, v, Some(u), visited);
@@ -37,22 +43,73 @@ fn dfs_cycle(g: &dyn Graph, u: usize, parent: Option<usize>, visited: &mut Vec<b
 }
 
 mod tests {
+    use std::ops::Deref;
+
     use super::*;
-    use crate::graph::undirected_weighted_graph::UndirectedWeightedGraph;
+    use crate::graph::directed_graph::DirectedGraph;
 
     #[test]
-    fn is_acyclic_success() {
-        let mut g = UndirectedWeightedGraph::new(5);
+    fn graph_without_cycle_success() {
+        let mut g = DirectedGraph::new(5);
 
         g.add_edge(0, 1, 1);
         g.add_edge(0, 2, 1);
         g.add_edge(0, 3, 1);
-        // g.add_edge(1, 2, 1);
-        // g.add_edge(2, 3, 1);
         g.add_edge(2, 4, 1);
 
         let expected = true;
-        let current = is_acyclic(&g, 0);
+        let current = is_acyclic(&g);
+        assert_eq!(expected, current);
+    }
+
+    #[test]
+    fn graph_with_cycle_success() {
+        let mut g = DirectedGraph::new(5);
+
+        g.add_edge(0, 1, 1);
+        g.add_edge(0, 2, 1);
+        g.add_edge(0, 3, 1);
+        g.add_edge(1, 2, 1);
+        g.add_edge(2, 3, 1);
+        g.add_edge(2, 4, 1);
+
+        let expected = false;
+        let current = is_acyclic(&g);
+        assert_eq!(expected, current);
+    }
+
+    #[test]
+    fn non_connected_graph_without_cycle_success() {
+        let mut g = DirectedGraph::new(8);
+
+        g.add_edge(0, 1, 1);
+        g.add_edge(0, 2, 1);
+        g.add_edge(0, 3, 1);
+        g.add_edge(2, 4, 1);
+
+        g.add_edge(5, 6, 1);
+        g.add_edge(6, 7, 1);
+
+        let expected = true;
+        let current = is_acyclic(&g);
+        assert_eq!(expected, current);
+    }
+
+    #[test]
+    fn non_connected_graph_with_cycle_success() {
+        let mut g = DirectedGraph::new(8);
+
+        g.add_edge(0, 1, 1);
+        g.add_edge(0, 2, 1);
+        g.add_edge(0, 3, 1);
+        g.add_edge(2, 4, 1);
+
+        g.add_edge(5, 6, 1);
+        g.add_edge(6, 7, 1);
+        g.add_edge(7, 5, 1);
+
+        let expected = false;
+        let current = is_acyclic(&g);
         assert_eq!(expected, current);
     }
 }

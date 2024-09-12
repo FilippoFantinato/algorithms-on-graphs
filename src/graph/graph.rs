@@ -1,6 +1,12 @@
+use std::collections::{HashMap, HashSet};
+
+pub type Vertex = usize;
+pub type Weight = i128;
+
 pub trait Graph {
-    fn add_edge(&mut self, u: usize, v: usize, w: i128);
-    fn get_size(&self) -> usize;
-    fn get_adj_list(&self, v: usize) -> &Vec<i128>;
-    fn get_weight(&self, v: usize, u: usize) -> i128;
+    fn add_edge(&mut self, u: Vertex, v: Vertex, w: Weight);
+    fn _get_size(&self) -> usize;
+    fn _get_adj_list(&self, v: &Vertex) -> Option<&HashMap<Vertex, Weight>>;
+    fn get_weight(&self, u: &Vertex, v: &Vertex) -> Option<&Weight>;
+    fn get_vertices(&self) -> &HashSet<Vertex>;
 }
