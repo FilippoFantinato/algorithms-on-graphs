@@ -1,2 +1,2 @@
-pub mod directed_graph;
 pub mod graph;
+pub mod undirected_graph;

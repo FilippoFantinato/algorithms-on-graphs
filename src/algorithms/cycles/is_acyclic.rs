@@ -46,11 +46,11 @@ mod tests {
     use std::ops::Deref;
 
     use super::*;
-    use crate::graph::directed_graph::DirectedGraph;
+    use crate::graph::undirected_graph::UndirectedGraph;
 
     #[test]
     fn graph_without_cycle_success() {
-        let mut g = DirectedGraph::new(5);
+        let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);
         g.add_edge(0, 2, 1);
@@ -64,7 +64,7 @@ mod tests {
 
     #[test]
     fn graph_with_cycle_success() {
-        let mut g = DirectedGraph::new(5);
+        let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);
         g.add_edge(0, 2, 1);
@@ -80,7 +80,7 @@ mod tests {
 
     #[test]
     fn non_connected_graph_without_cycle_success() {
-        let mut g = DirectedGraph::new(8);
+        let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);
         g.add_edge(0, 2, 1);
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn non_connected_graph_with_cycle_success() {
-        let mut g = DirectedGraph::new(8);
+        let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);
         g.add_edge(0, 2, 1);
