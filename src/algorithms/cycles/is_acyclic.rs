@@ -7,11 +7,16 @@ pub fn run(g: &dyn Graph) -> bool {
 }
 
 pub fn is_acyclic(g: &dyn Graph) -> bool {
+    let mut visited: HashSet<Vertex> = HashSet::new();
     for u in g.get_vertices() {
-        let mut visited: HashSet<Vertex> = HashSet::new();
-        let cycle = dfs_cycle(g, u, None, &mut visited);
-        if cycle {
-            return false;
+        if !visited.contains(u) {
+            let mut tmp_visited = HashSet::new();
+            let cycle = dfs_cycle(g, u, None, &mut tmp_visited);
+            if cycle {
+                return false;
+            }
+
+            visited.extend(&tmp_visited);
         }
     }
 
@@ -28,7 +33,7 @@ fn dfs_cycle(
 
     for v in g.get_vertices() {
         if (parent.is_none() || *v != *parent.unwrap()) && g.get_weight(u, v).is_some() {
-            if visited.get(v).is_some() {
+            if visited.contains(v) {
                 return true;
             } else {
                 let cycle = dfs_cycle(g, v, Some(u), visited);
@@ -86,7 +91,6 @@ mod tests {
         g.add_edge(0, 2, 1);
         g.add_edge(0, 3, 1);
         g.add_edge(2, 4, 1);
-
         g.add_edge(5, 6, 1);
         g.add_edge(6, 7, 1);
 
@@ -103,7 +107,6 @@ mod tests {
         g.add_edge(0, 2, 1);
         g.add_edge(0, 3, 1);
         g.add_edge(2, 4, 1);
-
         g.add_edge(5, 6, 1);
         g.add_edge(6, 7, 1);
         g.add_edge(7, 5, 1);
