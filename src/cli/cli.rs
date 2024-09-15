@@ -14,7 +14,6 @@ enum Algorithm {
     KruskalNaive,
 }
 
-/// Simple program to greet a person
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 pub struct Args {
@@ -31,14 +30,14 @@ pub fn run_cli() {
     match args.algorithm {
         Algorithm::IsAcyclic => {
             let g = read_graph(args.file);
-            let res = cycles::is_acyclic::run(&g);
+            let res = cycles::is_acyclic::run(g.deref());
 
             println!("Is acylic result: {:}", res);
         }
         Algorithm::KruskalNaive => {
             let g = read_graph(args.file);
-            let path = minimum_spanning_tree::kruskal_naive::run(&g);
-            let weight: i128 = path.iter().map(|e| (*e).2).sum();
+            let path = minimum_spanning_tree::kruskal_naive::run(g.deref());
+            let weight: i128 = path.iter().map(|e| e.2).sum();
 
             println!("Kruskal naive path: {:?}", path);
             println!("Kruskal naive weight: {:?}", weight);
@@ -46,7 +45,7 @@ pub fn run_cli() {
     }
 }
 
-fn read_graph(path: PathBuf) -> impl Graph {
+fn read_graph(path: PathBuf) -> Box<dyn Graph> {
     let lines = fs::read_to_string(path).unwrap();
     let mut lines = lines.lines();
     let mut header = lines
@@ -57,7 +56,7 @@ fn read_graph(path: PathBuf) -> impl Graph {
         .next()
         .map(|v| v.parse::<usize>().unwrap())
         .unwrap_or_else(|| panic!("Invalid format"));
-    let mut g = UndirectedGraph::new();
+    let mut g = Box::new(UndirectedGraph::new());
 
     lines.for_each(|v| {
         let mut line = v.split_whitespace();
