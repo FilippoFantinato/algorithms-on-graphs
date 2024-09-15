@@ -1,4 +1,6 @@
 use clap::Parser;
+use mockall::automock;
+use std::any::Any;
 use std::fs;
 use std::ops::{Deref, DerefMut};
 use std::path::PathBuf;
@@ -9,7 +11,7 @@ use crate::graph::graph::{Graph, Weight};
 use crate::graph::undirected_graph::UndirectedGraph;
 
 #[derive(clap::ValueEnum, Clone, Debug)]
-enum Algorithm {
+pub enum Algorithm {
     IsAcyclic,
     KruskalNaive,
 }
@@ -18,34 +20,30 @@ enum Algorithm {
 #[command(version, about, long_about = None)]
 pub struct Args {
     #[arg(short, long, value_enum)]
-    algorithm: Algorithm,
+    pub algorithm: Algorithm,
 
     #[arg(short, long)]
-    file: PathBuf,
+    pub file: PathBuf,
 }
 
-pub fn run_cli() {
-    let args: Args = Args::parse();
-
+pub fn run_cli(args: &Args) -> Box<dyn Any> {
     match args.algorithm {
         Algorithm::IsAcyclic => {
-            let g = read_graph(args.file);
+            let g = read_graph(&args.file);
             let res = cycles::is_acyclic::run(g.deref());
 
-            println!("Is acylic result: {:}", res);
+            Box::new(res)
         }
         Algorithm::KruskalNaive => {
-            let g = read_graph(args.file);
+            let g = read_graph(&args.file);
             let path = minimum_spanning_tree::kruskal_naive::run(g.deref());
-            let weight: i128 = path.iter().map(|e| e.2).sum();
 
-            println!("Kruskal naive path: {:?}", path);
-            println!("Kruskal naive weight: {:?}", weight);
+            Box::new(path)
         }
     }
 }
 
-fn read_graph(path: PathBuf) -> Box<dyn Graph> {
+fn read_graph(path: &PathBuf) -> Box<dyn Graph> {
     let lines = fs::read_to_string(path).unwrap();
     let mut lines = lines.lines();
     let mut header = lines
