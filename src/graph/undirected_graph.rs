@@ -89,7 +89,7 @@ mod tests {
     use super::UndirectedGraph;
 
     #[test]
-    fn add_edge_success() {
+    fn add_edge() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -111,7 +111,7 @@ mod tests {
     }
 
     #[test]
-    fn get_size_success() {
+    fn get_size() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -123,7 +123,7 @@ mod tests {
     }
 
     #[test]
-    fn get_adj_list_existing_vertex_success() {
+    fn get_adj_list_existing_vertex() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -137,7 +137,7 @@ mod tests {
     }
 
     #[test]
-    fn get_adj_list_non_existent_vertex_success() {
+    fn get_adj_list_non_existent_vertex() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -150,7 +150,7 @@ mod tests {
     }
 
     #[test]
-    fn get_vertices_success() {
+    fn get_vertices() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -163,7 +163,7 @@ mod tests {
     }
 
     #[test]
-    fn get_edges_success() {
+    fn get_edges() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -176,7 +176,7 @@ mod tests {
     }
 
     #[test]
-    fn get_weight_existing_edge_success() {
+    fn get_weight_existing_edge() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -188,7 +188,7 @@ mod tests {
     }
 
     #[test]
-    fn get_weight_non_existent_edge_success() {
+    fn get_weight_non_existent_edge() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);
@@ -200,7 +200,7 @@ mod tests {
     }
 
     #[test]
-    fn delete_edge_existing_edge_success() {
+    fn delete_edge_existing_edge() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 2);

@@ -4,7 +4,7 @@ use algorithms_on_graphs::cli::cli::{run_cli, Algorithm, Args};
 use algorithms_on_graphs::graph::graph::Path;
 
 #[test]
-fn kruskal_naive_success() {
+fn kruskal_naive() {
     let args = Args {
         algorithm: Algorithm::KruskalNaive,
         file: PathBuf::from_str("./dataset/input_random_01_10.txt").unwrap(),

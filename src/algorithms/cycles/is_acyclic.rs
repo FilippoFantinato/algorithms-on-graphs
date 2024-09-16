@@ -54,7 +54,7 @@ mod tests {
     use crate::graph::undirected_graph::UndirectedGraph;
 
     #[test]
-    fn graph_without_cycle_success() {
+    fn graph_without_cycle() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);
@@ -68,7 +68,7 @@ mod tests {
     }
 
     #[test]
-    fn graph_with_cycle_success() {
+    fn graph_with_cycle() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);
@@ -84,7 +84,7 @@ mod tests {
     }
 
     #[test]
-    fn non_connected_graph_without_cycle_success() {
+    fn non_connected_graph_without_cycle() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);
@@ -100,7 +100,7 @@ mod tests {
     }
 
     #[test]
-    fn non_connected_graph_with_cycle_success() {
+    fn non_connected_graph_with_cycle() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(0, 1, 1);

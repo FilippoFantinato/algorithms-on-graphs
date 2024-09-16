@@ -36,7 +36,7 @@ mod tests {
     };
 
     #[test]
-    fn kruskal_naive_simple_graph_success() {
+    fn kruskal_naive_simple_graph() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(1, 2, 4993);
@@ -65,7 +65,7 @@ mod tests {
     }
 
     #[test]
-    fn kruskal_naive_graph_with_cycle_success() {
+    fn kruskal_naive_graph_with_cycle() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(1, 2, 4993);
@@ -97,7 +97,7 @@ mod tests {
     }
 
     #[test]
-    fn kruskal_naive_full_connected_graph_success() {
+    fn kruskal_naive_full_connected_graph() {
         let mut g = UndirectedGraph::new();
 
         g.add_edge(1, 2, -544);
