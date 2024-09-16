@@ -1,6 +1,6 @@
-mod algorithms;
-mod cli;
-mod graph;
+pub mod algorithms;
+pub mod cli;
+pub mod graph;
 
 use clap::Parser;
 use cli::cli::Algorithm;

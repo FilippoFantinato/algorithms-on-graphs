@@ -65,18 +65,18 @@ impl Graph for UndirectedGraph {
             self.adj_matrix.get_mut(u).unwrap().remove(v);
             self.adj_matrix.get_mut(v).unwrap().remove(u);
 
-            if self.adj_matrix.get(u).unwrap().is_empty() {
-                self.adj_matrix.remove(u);
-                self.vertices.remove(u);
-            }
-
-            if self.adj_matrix.get(v).unwrap().is_empty() {
-                self.adj_matrix.remove(v);
-                self.vertices.remove(v);
-            }
+            clean_vertex(self, u);
+            clean_vertex(self, v);
 
             self.edges.remove(&e);
         });
+    }
+}
+
+fn clean_vertex(g: &mut UndirectedGraph, t: &Vertex) {
+    if g.adj_matrix.get(t).unwrap().is_empty() {
+        g.adj_matrix.remove(t);
+        g.vertices.remove(t);
     }
 }
 

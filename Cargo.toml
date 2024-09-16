@@ -1,7 +1,15 @@
 [package]
-name = "algorithms-on-graphs"
+name = "algorithms_on_graphs"
 version = "0.1.0"
 edition = "2021"
+
+[[bin]]
+name = "algorithms_on_graphs"
+path = "./src/main.rs"
+
+[lib]
+name = "algorithms_on_graphs"
+path = "./src/main.rs"
 
 [dependencies]
 clap = { version = "4.5.17", features = ["derive"] }
