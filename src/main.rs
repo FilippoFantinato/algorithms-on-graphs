@@ -1,5 +1,6 @@
 pub mod algorithms;
 pub mod cli;
+pub mod data_structures;
 pub mod graph;
 
 use clap::Parser;
@@ -23,6 +24,13 @@ fn main() {
 
             println!("Kruskal naive path: {:?}", path);
             println!("Kruskal naive weight: {:?}", weight);
+        }
+        Algorithm::KruskalUnionFind => {
+            let path = res.downcast_ref::<Path>().unwrap();
+            let weight: i128 = path.iter().map(|e| e.2).sum();
+
+            println!("Kruskal union find path: {:?}", path);
+            println!("Kruskal union find weight: {:?}", weight);
         }
     };
 }

@@ -14,6 +14,7 @@ use crate::graph::undirected_graph::UndirectedGraph;
 pub enum Algorithm {
     IsAcyclic,
     KruskalNaive,
+    KruskalUnionFind,
 }
 
 #[derive(Parser, Debug)]
@@ -37,6 +38,12 @@ pub fn run_cli(args: &Args) -> Box<dyn Any> {
         Algorithm::KruskalNaive => {
             let g = read_graph(&args.file);
             let path = minimum_spanning_tree::kruskal_naive::run(g.deref());
+
+            Box::new(path)
+        }
+        Algorithm::KruskalUnionFind => {
+            let g = read_graph(&args.file);
+            let path = minimum_spanning_tree::kruskal_union_find::run(g.deref());
 
             Box::new(path)
         }
