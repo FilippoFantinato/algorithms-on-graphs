@@ -8,6 +8,7 @@ fn is_acylic() {
     let args = Args {
         algorithm: Algorithm::IsAcyclic,
         file: PathBuf::from_str("./dataset/input_random_01_10.txt").unwrap(),
+        start: None,
     };
     let res = run_cli(&args);
 

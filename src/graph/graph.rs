@@ -1,16 +1,14 @@
 use std::collections::{HashMap, HashSet};
 
-pub type Vertex = usize;
-pub type Weight = i128;
-pub type Edge = (Vertex, Vertex, Weight);
-pub type Path = Vec<Edge>;
+pub type Edge<V, W> = (V, V, W);
+pub type Path<V, W> = Vec<Edge<V, W>>;
 
-pub trait Graph {
-    fn add_edge(&mut self, u: Vertex, v: Vertex, w: Weight);
+pub trait Graph<V, W> {
+    fn add_edge(&mut self, u: V, v: V, w: W);
     fn _get_size(&self) -> usize;
-    fn _get_adj_list(&self, v: &Vertex) -> Option<&HashMap<Vertex, Weight>>;
-    fn get_weight(&self, u: &Vertex, v: &Vertex) -> Option<&Weight>;
-    fn get_vertices(&self) -> &HashSet<Vertex>;
-    fn get_edges(&self) -> &HashSet<Edge>;
-    fn delete_edge(&mut self, u: &Vertex, v: &Vertex);
+    fn _get_adj_list(&self, v: &V) -> Option<&HashMap<V, W>>;
+    fn get_weight(&self, u: &V, v: &V) -> Option<&W>;
+    fn get_vertices(&self) -> &HashSet<V>;
+    fn get_edges(&self) -> &HashSet<Edge<V, W>>;
+    fn delete_edge(&mut self, u: &V, v: &V);
 }

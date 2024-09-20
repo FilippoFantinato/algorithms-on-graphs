@@ -2,17 +2,17 @@ use crate::{
     algorithms::cycles::is_acyclic::is_acyclic,
     graph::{
         graph::{Edge, Graph, Path},
-        undirected_graph::UndirectedGraph,
+        undirected_graph::{UndirectedGraph, Vertex, Weight},
     },
 };
 
-pub fn run(g: &dyn Graph) -> Path {
+pub fn run(g: &dyn Graph<Vertex, Weight>) -> Path<Vertex, Weight> {
     kruskal_naive(g)
 }
 
-fn kruskal_naive(g: &dyn Graph) -> Path {
-    let mut tmp = UndirectedGraph::new();
-    let mut edges: Vec<&Edge> = g.get_edges().iter().collect();
+fn kruskal_naive(g: &dyn Graph<Vertex, Weight>) -> Path<Vertex, Weight> {
+    let mut tmp = UndirectedGraph::<Vertex, Weight>::new();
+    let mut edges: Vec<&Edge<Vertex, Weight>> = g.get_edges().iter().collect();
     edges.sort_by_key(|e| e.2);
 
     let mut mst = vec![];

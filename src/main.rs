@@ -5,7 +5,10 @@ pub mod graph;
 
 use clap::Parser;
 use cli::cli::Algorithm;
-use graph::graph::Path;
+use graph::{
+    graph::Path,
+    undirected_graph::{Vertex, Weight},
+};
 
 use crate::cli::cli::{run_cli, Args};
 
@@ -19,18 +22,25 @@ fn main() {
             println!("Is acylic result: {:}", res.downcast_ref::<bool>().unwrap());
         }
         Algorithm::KruskalNaive => {
-            let path = res.downcast_ref::<Path>().unwrap();
-            let weight: i128 = path.iter().map(|e| e.2).sum();
+            let path = res.downcast_ref::<Path<Vertex, Weight>>().unwrap();
+            let weight: Weight = path.iter().map(|e| e.2).sum();
 
             println!("Kruskal naive path: {:?}", path);
             println!("Kruskal naive weight: {:?}", weight);
         }
         Algorithm::KruskalUnionFind => {
-            let path = res.downcast_ref::<Path>().unwrap();
-            let weight: i128 = path.iter().map(|e| e.2).sum();
+            let path = res.downcast_ref::<Path<Vertex, Weight>>().unwrap();
+            let weight: Weight = path.iter().map(|e| e.2).sum();
 
             println!("Kruskal union find path: {:?}", path);
             println!("Kruskal union find weight: {:?}", weight);
+        }
+        Algorithm::Prim => {
+            let path = res.downcast_ref::<Path<Vertex, Weight>>().unwrap();
+            let weight: Weight = path.iter().map(|e| e.2).sum();
+
+            println!("Prim path: {:?}", path);
+            println!("Prim weight: {:?}", weight);
         }
     };
 }

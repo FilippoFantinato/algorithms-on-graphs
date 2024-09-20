@@ -7,14 +7,15 @@ use std::path::PathBuf;
 use std::rc::Rc;
 
 use crate::algorithms::{cycles, minimum_spanning_tree};
-use crate::graph::graph::{Graph, Weight};
-use crate::graph::undirected_graph::UndirectedGraph;
+use crate::graph::graph::Graph;
+use crate::graph::undirected_graph::{UndirectedGraph, Vertex, Weight};
 
 #[derive(clap::ValueEnum, Clone, Debug)]
 pub enum Algorithm {
     IsAcyclic,
     KruskalNaive,
     KruskalUnionFind,
+    Prim,
 }
 
 #[derive(Parser, Debug)]
@@ -25,6 +26,9 @@ pub struct Args {
 
     #[arg(short, long)]
     pub file: PathBuf,
+
+    #[arg(short, long, default_value=None)]
+    pub start: Option<Vertex>,
 }
 
 pub fn run_cli(args: &Args) -> Box<dyn Any> {
@@ -36,7 +40,7 @@ pub fn run_cli(args: &Args) -> Box<dyn Any> {
             Box::new(res)
         }
         Algorithm::KruskalNaive => {
-            let g = read_graph(&args.file);
+            let g: Box<dyn Graph<Vertex, Weight>> = read_graph(&args.file);
             let path = minimum_spanning_tree::kruskal_naive::run(g.deref());
 
             Box::new(path)
@@ -47,10 +51,19 @@ pub fn run_cli(args: &Args) -> Box<dyn Any> {
 
             Box::new(path)
         }
+        Algorithm::Prim => {
+            let g = read_graph(&args.file);
+            let start = args
+                .start
+                .unwrap_or_else(|| panic!("Missing starting vertex"));
+            let path = minimum_spanning_tree::prim::run(g.deref(), &start);
+
+            Box::new(path)
+        }
     }
 }
 
-fn read_graph(path: &PathBuf) -> Box<dyn Graph> {
+fn read_graph(path: &PathBuf) -> Box<dyn Graph<Vertex, Weight>> {
     let lines = fs::read_to_string(path).unwrap();
     let mut lines = lines.lines();
     let mut header = lines
@@ -63,19 +76,19 @@ fn read_graph(path: &PathBuf) -> Box<dyn Graph> {
         .unwrap_or_else(|| panic!("Invalid format"));
     let mut g = Box::new(UndirectedGraph::new());
 
-    lines.for_each(|v| {
-        let mut line = v.split_whitespace();
+    lines.for_each(|tmp| {
+        let mut line = tmp.split_whitespace();
         let u = line
             .next()
-            .map(|v| v.parse::<usize>().unwrap())
+            .map(|v| v.parse::<Vertex>().unwrap())
             .unwrap_or_else(|| panic!("Invalid format"));
         let v = line
             .next()
-            .map(|v| v.parse::<usize>().unwrap())
+            .map(|v| v.parse::<Vertex>().unwrap())
             .unwrap_or_else(|| panic!("Invalid format"));
         let w = line
             .next()
-            .map(|v| v.parse::<i128>().unwrap())
+            .map(|v| v.parse::<Weight>().unwrap())
             .unwrap_or_else(|| panic!("Invalid format"));
 
         g.add_edge(u, v, w);

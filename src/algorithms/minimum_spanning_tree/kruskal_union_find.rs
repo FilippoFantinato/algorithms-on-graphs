@@ -1,13 +1,14 @@
 use crate::data_structures::union_find::UnionFind;
 use crate::graph::graph::{Edge, Graph, Path};
+use crate::graph::undirected_graph::{Vertex, Weight};
 
-pub fn run(g: &dyn Graph) -> Path {
+pub fn run(g: &dyn Graph<Vertex, Weight>) -> Path<Vertex, Weight> {
     kruskal_union_find(g)
 }
 
-pub fn kruskal_union_find(g: &dyn Graph) -> Path {
+pub fn kruskal_union_find(g: &dyn Graph<Vertex, Weight>) -> Path<Vertex, Weight> {
     let mut uf = UnionFind::from(g.get_vertices());
-    let mut edges: Vec<&Edge> = g.get_edges().iter().collect();
+    let mut edges: Vec<&Edge<Vertex, Weight>> = g.get_edges().iter().collect();
     edges.sort_by_key(|e| e.2);
 
     let mut mst = vec![];

@@ -1,12 +1,15 @@
 use std::collections::HashSet;
 
-use crate::graph::graph::{Graph, Vertex};
+use crate::graph::{
+    graph::Graph,
+    undirected_graph::{Vertex, Weight},
+};
 
-pub fn run(g: &dyn Graph) -> bool {
+pub fn run(g: &dyn Graph<Vertex, Weight>) -> bool {
     return is_acyclic(g);
 }
 
-pub fn is_acyclic(g: &dyn Graph) -> bool {
+pub fn is_acyclic(g: &dyn Graph<Vertex, Weight>) -> bool {
     let mut visited: HashSet<Vertex> = HashSet::new();
     for u in g.get_vertices() {
         if !visited.contains(u) {
@@ -24,7 +27,7 @@ pub fn is_acyclic(g: &dyn Graph) -> bool {
 }
 
 fn dfs_cycle(
-    g: &dyn Graph,
+    g: &dyn Graph<Vertex, Weight>,
     u: &Vertex,
     parent: Option<&Vertex>,
     visited: &mut HashSet<Vertex>,

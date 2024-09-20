@@ -1,18 +1,20 @@
 use std::collections::{HashMap, HashSet};
+use std::hash::Hash;
 
-use crate::graph::graph::Graph;
+use crate::graph::graph::{Edge, Graph};
 
-use super::graph::{Edge, Vertex, Weight};
+pub type Vertex = usize;
+pub type Weight = i32;
 
 #[derive(PartialEq, Eq)]
-pub struct UndirectedGraph {
-    adj_matrix: HashMap<Vertex, HashMap<Vertex, Weight>>,
-    vertices: HashSet<Vertex>,
-    edges: HashSet<Edge>,
+pub struct UndirectedGraph<V: Eq + Clone + Hash + Ord + Copy, W: Eq + Clone + Hash> {
+    adj_matrix: HashMap<V, HashMap<V, W>>,
+    vertices: HashSet<V>,
+    edges: HashSet<(V, V, W)>,
 }
 
-impl UndirectedGraph {
-    pub fn new() -> UndirectedGraph {
+impl<V: Eq + Clone + Hash + Ord + Copy, W: Eq + Clone + Hash> UndirectedGraph<V, W> {
+    pub fn new() -> UndirectedGraph<V, W> {
         UndirectedGraph {
             adj_matrix: HashMap::new(),
             vertices: HashSet::new(),
@@ -21,45 +23,50 @@ impl UndirectedGraph {
     }
 }
 
-impl Graph for UndirectedGraph {
-    fn add_edge(&mut self, u: Vertex, v: Vertex, w: Weight) {
+impl<V: Eq + Clone + Hash + Ord + Copy, W: Eq + Clone + Hash> Graph<V, W>
+    for UndirectedGraph<V, W>
+{
+    fn add_edge(&mut self, u: V, v: V, w: W) {
         if self.adj_matrix.get(&u).is_none() {
             self.adj_matrix.insert(u, HashMap::new());
         }
         if self.adj_matrix.get(&v).is_none() {
             self.adj_matrix.insert(v, HashMap::new());
         }
-        self.adj_matrix.get_mut(&u).unwrap().insert(v, w);
-        self.adj_matrix.get_mut(&v).unwrap().insert(u, w);
+        self.adj_matrix.get_mut(&u).unwrap().insert(v, w.clone());
+        self.adj_matrix.get_mut(&v).unwrap().insert(u, w.clone());
 
         self.vertices.insert(u);
         self.vertices.insert(v);
 
-        self.edges
-            .insert(if u <= v { (u, v, w) } else { (v, u, w) });
+        self.edges.insert(if u <= v {
+            (u, v, w.clone())
+        } else {
+            (v, u, w.clone())
+        });
     }
 
     fn _get_size(&self) -> usize {
         self.vertices.len()
     }
 
-    fn _get_adj_list(&self, v: &Vertex) -> Option<&HashMap<Vertex, Weight>> {
+    fn _get_adj_list(&self, v: &V) -> Option<&HashMap<V, W>> {
         self.adj_matrix.get(&v)
     }
 
-    fn get_weight(&self, u: &Vertex, v: &Vertex) -> Option<&Weight> {
+    fn get_weight(&self, u: &V, v: &V) -> Option<&W> {
         self.adj_matrix.get(u).and_then(|el| el.get(v))
     }
 
-    fn get_vertices(&self) -> &HashSet<Vertex> {
+    fn get_vertices(&self) -> &HashSet<V> {
         &self.vertices
     }
 
-    fn get_edges(&self) -> &HashSet<Edge> {
+    fn get_edges(&self) -> &HashSet<Edge<V, W>> {
         &self.edges
     }
 
-    fn delete_edge(&mut self, u: &Vertex, v: &Vertex) {
+    fn delete_edge(&mut self, u: &V, v: &V) {
         self.get_weight(u, v).cloned().map(|w| {
             let e = if u <= v { (*u, *v, w) } else { (*v, *u, w) };
             self.adj_matrix.get_mut(u).unwrap().remove(v);
@@ -73,7 +80,10 @@ impl Graph for UndirectedGraph {
     }
 }
 
-fn clean_vertex(g: &mut UndirectedGraph, t: &Vertex) {
+fn clean_vertex<V: Eq + Clone + Hash + Ord + Copy, W: Eq + Clone + Hash>(
+    g: &mut UndirectedGraph<V, W>,
+    t: &V,
+) {
     if g.adj_matrix.get(t).unwrap().is_empty() {
         g.adj_matrix.remove(t);
         g.vertices.remove(t);
@@ -84,19 +94,19 @@ mod tests {
     use std::collections::{HashMap, HashSet};
     use std::vec;
 
-    use crate::graph::graph::{Edge, Graph, Vertex, Weight};
+    use crate::graph::graph::{Edge, Graph};
+    use crate::graph::undirected_graph::{Vertex, Weight};
 
     use super::UndirectedGraph;
 
     #[test]
     fn add_edge() {
-        let mut g = UndirectedGraph::new();
+        let mut g = UndirectedGraph::<Vertex, Weight>::new();
 
         g.add_edge(0, 1, 2);
         g.add_edge(1, 4, 3);
 
-        let expected_edges: HashSet<(Vertex, Vertex, Weight)> =
-            HashSet::from([(0, 1, 2), (1, 4, 3)]);
+        let expected_edges: HashSet<Edge<Vertex, Weight>> = HashSet::from([(0, 1, 2), (1, 4, 3)]);
         assert_eq!(g.edges, expected_edges);
 
         let expected_vertices: HashSet<Vertex> = HashSet::from([0, 1, 4]);
@@ -169,8 +179,8 @@ mod tests {
         g.add_edge(0, 1, 2);
         g.add_edge(1, 4, 3);
 
-        let edges: HashSet<Edge> = HashSet::from([(0, 1, 2), (1, 4, 3)]);
-        let expected: &HashSet<Edge> = &edges;
+        let edges: HashSet<Edge<Vertex, Weight>> = HashSet::from([(0, 1, 2), (1, 4, 3)]);
+        let expected: &HashSet<Edge<Vertex, Weight>> = &edges;
         let current = g.get_edges();
         assert_eq!(expected, current);
     }
