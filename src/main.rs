@@ -3,6 +3,7 @@ pub mod cli;
 pub mod data_structures;
 pub mod graph;
 
+use algorithms::connected_components;
 use clap::Parser;
 use cli::cli::Algorithm;
 use graph::{
@@ -41,6 +42,11 @@ fn main() {
 
             println!("Prim path: {:?}", path);
             println!("Prim weight: {:?}", weight);
+        }
+        Algorithm::CountConnectedComponents => {
+            let connected_components = res.downcast_ref::<usize>().unwrap();
+
+            println!("Connected components: {:}", connected_components);
         }
     };
 }

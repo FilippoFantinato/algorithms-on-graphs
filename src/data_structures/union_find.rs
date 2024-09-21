@@ -72,3 +72,5 @@ impl<T: Eq + Hash + Clone + Copy> UnionFind<T> {
         self.data.insert(el, new_parent);
     }
 }
+
+mod test {}

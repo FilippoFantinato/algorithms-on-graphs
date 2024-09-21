@@ -6,7 +6,8 @@ use std::ops::{Deref, DerefMut};
 use std::path::PathBuf;
 use std::rc::Rc;
 
-use crate::algorithms::{cycles, minimum_spanning_tree};
+use crate::algorithms::connected_components::count_connected_components::count_connected_components;
+use crate::algorithms::{connected_components, cycles, minimum_spanning_tree};
 use crate::graph::graph::Graph;
 use crate::graph::undirected_graph::{UndirectedGraph, Vertex, Weight};
 
@@ -16,6 +17,7 @@ pub enum Algorithm {
     KruskalNaive,
     KruskalUnionFind,
     Prim,
+    CountConnectedComponents,
 }
 
 #[derive(Parser, Debug)]
@@ -59,6 +61,13 @@ pub fn run_cli(args: &Args) -> Box<dyn Any> {
             let path = minimum_spanning_tree::prim::run(g.deref(), &start);
 
             Box::new(path)
+        }
+        Algorithm::CountConnectedComponents => {
+            let g = read_graph(&args.file);
+            let connected_components =
+                connected_components::count_connected_components::run(g.deref());
+
+            Box::new(connected_components)
         }
     }
 }
