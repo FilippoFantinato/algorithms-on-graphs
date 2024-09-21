@@ -15,13 +15,11 @@ A collection of algorithms on graphs implemented in Rust just for fun.
 | Travelling Salesman Problem           | :x: |
 | Bellman–Ford algorithm                | :x: |
 | Dijkstra's algorithm                  | :x: |
-| Prim's algorithm                      | :x: |
+| Prim's algorithm                      | :heavy_check_mark: |
 | Connectivity s-t                      | :x: |
 | Finding out all cycles                | :x: |
-| Counting connected components         | :x: |
+| Counting connected components         | :heavy_check_mark: |
 | A* search                             | :x: |
-| Depth-first search                    | :x: |
-| Breadth-first search                  | :x: |
 | Kruskal's algorithm with union find   | :heavy_check_mark: |
 | Kruskal's algorithm                   | :heavy_check_mark: |
 | Checking for ciclicity                | :heavy_check_mark:  |
