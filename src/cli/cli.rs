@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use std::rc::Rc;
 
 use crate::algorithms::connected_components::count_connected_components::count_connected_components;
+use crate::algorithms::connectivity::checking_connectivity;
 use crate::algorithms::{connected_components, cycles, minimum_spanning_tree};
 use crate::graph::graph::Graph;
 use crate::graph::undirected_graph::{UndirectedGraph, Vertex, Weight};
@@ -18,6 +19,7 @@ pub enum Algorithm {
     KruskalUnionFind,
     Prim,
     CountConnectedComponents,
+    CheckingConnectivity,
 }
 
 #[derive(Parser, Debug)]
@@ -31,6 +33,9 @@ pub struct Args {
 
     #[arg(short, long, default_value=None)]
     pub start: Option<Vertex>,
+
+    #[arg(short, long, default_value=None)]
+    pub end: Option<Vertex>,
 }
 
 pub fn run_cli(args: &Args) -> Box<dyn Any> {
@@ -68,6 +73,16 @@ pub fn run_cli(args: &Args) -> Box<dyn Any> {
                 connected_components::count_connected_components::run(g.deref());
 
             Box::new(connected_components)
+        }
+        Algorithm::CheckingConnectivity => {
+            let g = read_graph(&args.file);
+            let start = args
+                .start
+                .unwrap_or_else(|| panic!("Missing starting vertex"));
+            let end = args.end.unwrap_or_else(|| panic!("Missing ending vertex"));
+            let connected = checking_connectivity::run(g.deref(), &start, &end);
+
+            Box::new(connected)
         }
     }
 }
