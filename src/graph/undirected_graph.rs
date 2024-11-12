@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
+use std::ops::BitXor;
 
 use crate::graph::graph::{Edge, Graph};
 
@@ -77,6 +78,24 @@ impl<V: Eq + Clone + Hash + Ord + Copy, W: Eq + Clone + Hash> Graph<V, W>
 
             self.edges.remove(&e);
         });
+    }
+}
+
+impl<V: Eq + Clone + Hash + Ord + Copy, W: Eq + Clone + Hash> BitXor for UndirectedGraph<V, W> {
+    type Output = Self;
+
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        let edges: HashSet<&(V, V, W)> =
+            HashSet::from_iter(self.get_edges().union(rhs.get_edges()));
+        let inter: HashSet<&(V, V, W)> =
+            HashSet::from_iter(self.get_edges().intersection(rhs.get_edges()));
+        let mut res: UndirectedGraph<V, W> = UndirectedGraph::new();
+
+        edges
+            .difference(&inter)
+            .for_each(|(u, v, w)| res.add_edge(*u, *v, w.clone()));
+
+        res
     }
 }
 

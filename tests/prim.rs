@@ -10,6 +10,7 @@ fn prim() {
         algorithm: Algorithm::Prim,
         file: PathBuf::from_str("./dataset/input_random_01_10.txt").unwrap(),
         start: Some(1),
+        end: None,
     };
     let res = run_cli(&args);
 

@@ -49,7 +49,7 @@ fn main() {
             println!("Connected components: {:}", connected_components);
         }
         Algorithm::CheckingConnectivity => {
-            let connected = res.downcast_ref::<usize>().unwrap();
+            let connected = res.downcast_ref::<bool>().unwrap();
 
             println!("Checking for connectivity: {:}", connected);
         }

@@ -10,6 +10,7 @@ fn wrong_header() {
         algorithm: Algorithm::IsAcyclic,
         file: PathBuf::from_str("./tests/test_dataset/wrong_header.txt").unwrap(),
         start: None,
+        end: None,
     };
     run_cli(&args);
 }
@@ -21,6 +22,7 @@ fn wrong_first_vertex() {
         algorithm: Algorithm::IsAcyclic,
         file: PathBuf::from_str("./tests/test_dataset/wrong_first_vertex.txt").unwrap(),
         start: None,
+        end: None,
     };
     run_cli(&args);
 }
@@ -32,6 +34,7 @@ fn wrong_second_vertex() {
         algorithm: Algorithm::IsAcyclic,
         file: PathBuf::from_str("./tests/test_dataset/wrong_second_vertex.txt").unwrap(),
         start: None,
+        end: None,
     };
     run_cli(&args);
 }
@@ -43,6 +46,7 @@ fn wrong_weight() {
         algorithm: Algorithm::IsAcyclic,
         file: PathBuf::from_str("./tests/test_dataset/wrong_weight.txt").unwrap(),
         start: None,
+        end: None,
     };
     run_cli(&args);
 }
